@@ -8,6 +8,7 @@ function QuestionBox({ imageUrl, title, description, order, level }) {
     console.log(imageUrl);
     console.log(title);
     console.log(description);
+	const descriptionLines = description.split(RegExp("\r|\n"));
     return (
         <>
             {/* <Modal open={open} handleClose={handleClose} /> */}
@@ -26,7 +27,10 @@ function QuestionBox({ imageUrl, title, description, order, level }) {
                 </div>
                 <div className={styles.questionDiv}>
                     <div className={styles.descrpBox}>
-                        <p>{description}</p>
+						{descriptionLines.map((line, index) => {
+							if (line == "") return <br key={index}/>
+							return <p key={index}>{line}</p>
+						})}
                     </div>
 
                     {
