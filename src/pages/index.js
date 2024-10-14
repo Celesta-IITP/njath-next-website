@@ -50,7 +50,7 @@ export default function Landing() {
                     <Link href="/register" className="black_btn" style={{marginRight: "max(2.5vw, 5px)"}}>
                         Register
                     </Link>
-                    <Link href="https://drive.google.com/file/d/1l-nZIooehhQXzwERm4cDheG6Zpli3AXM/view?pli=1" className="border_outline" style={{marginLeft: "max(2.5vw, 5px)", borderRadius: 10}}>
+                    <Link href="https://drive.google.com/file/d/1zN0tMul6S6pUM0fHFYZrnDqNW_usyIJo/view?usp=sharing" className="border_outline" style={{marginLeft: "max(2.5vw, 5px)", borderRadius: 10}}>
                         Rulebook
                     </Link>
                 </div>
@@ -93,7 +93,7 @@ export default function Landing() {
                     </div>
                     <div className="self-start max-md:hidden mr-5 ml-5">
                         <Image
-                            src="/assets/Verdant-Odyssey.svg"
+                            src="/assets/Exploring-The-Epochs.png"
                             width={347.36}
                             height={179}
                             alt="Njath"
@@ -103,13 +103,13 @@ export default function Landing() {
                         <p className="font-bold">Direct Links:</p>
                         <br />
                         <Link
-                            href="https://drive.google.com/file/d/1l-nZIooehhQXzwERm4cDheG6Zpli3AXM/view?pli=1"
+                            href="https://drive.google.com/file/d/1zN0tMul6S6pUM0fHFYZrnDqNW_usyIJo/view?usp=sharing"
                             className="text-sm"
                         >
                             NJATH Rulebook
                         </Link>
                         <br />
-                        <Link href="https://celestaiitp.tech/" className="text-sm">
+                        <Link href="https://celesta.iitp.ac.in/" className="text-sm">
                             {" "}
                             Celesta Official Website{" "}
                         </Link>
