@@ -3,34 +3,50 @@ import Button from "@mui/material/Button";
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
-import Modal from "@mui/material/Modal";
-import Box from "@mui/material/Box";
-import { Montserrat } from "next/font/google";
-import { useAuth } from "@context/AuthContext";
-import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import UnlockConfirmationModal from "./UnlockConfirmationModal";
 
 export default function QuestionList({ question, level }) {
-    const router = useRouter();
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalState, setModalState] = useState({
+        isOpen: false,
+        questionId: null,
+        unlockLink: "",
+    });
 
-    const handleOpenConfirmationModal = (link) => {
-        const confirmation = window.confirm(
-            "Are you sure you want to unlock this question? This will deduct 10 points."
-        );
+    const handleOpenConfirmationModal = (questionId, link) => {
+        setModalState({
+            isOpen: true,
+            questionId,
+            unlockLink: link,
+        });
+    };
 
-        if (confirmation) {
-            window.location.href = link; // Redirect to the link
-        } else {
-            // The user clicked "Cancel"
-            toast.error("Unlock canceled.");
+    const handleCloseModal = () => {
+        setModalState({
+            isOpen: false,
+            questionId: null,
+            unlockLink: "",
+        });
+    };
+
+    const handleConfirmUnlock = () => {
+        if (modalState.unlockLink) {
+            window.location.href = modalState.unlockLink;
         }
+        handleCloseModal();
     };
 
     return (
         <>
+            <ToastContainer autoClose={2000} />
+            <UnlockConfirmationModal
+                isOpen={modalState.isOpen}
+                onClose={handleCloseModal}
+                onConfirm={handleConfirmUnlock}
+            />
+
             {question.map(({ type, title }, index) => {
                 let borderColor, icon, titleColor;
 
@@ -47,7 +63,6 @@ export default function QuestionList({ question, level }) {
                     titleColor = "#FFFFFF99";
                 } else if (type === 1 || type === 2) {
                     borderColor = "#FDCC06";
-
                     icon = (
                         <Image
                             src="/assets/Property 1=Unlocked Icon.svg"
@@ -73,7 +88,7 @@ export default function QuestionList({ question, level }) {
                 const link = type === 0 ? "" : `/question?level=${level}&order=${index + 1}`;
                 const divStyle = {
                     display: "flex",
-                    alignItems: "center", // Align items vertically in the center
+                    alignItems: "center",
                     padding: "8px",
                     margin: "30px",
                     border: `2px solid ${borderColor}`,
@@ -85,46 +100,43 @@ export default function QuestionList({ question, level }) {
                     fontWeight: "600",
                     marginBottom: "0.5rem",
                     letterSpacing: "1px",
-                    color: `${titleColor}`,
+                    color: titleColor,
                 };
 
                 return (
-                    <>
-                        <ToastContainer autoClose={2000} />
-                        <div key={index} style={divStyle}>
-                            <div>{icon}</div>
-                            <div className="ml-4">
-                                {" "}
-                                <div style={titleStyle}>
-                                    <Link href={link}>{title}</Link>
-                                </div>
-                            </div>
-                            <div className="ml-auto">
-                                {" "}
-                                {type === 0 && (
-                                    <Button
-                                        variant="outlined"
-                                        onClick={() =>
-                                            handleOpenConfirmationModal(
-                                                `/question?safe=${1}&level=${Number(level)}&order=${
-                                                    index + 1
-                                                }`
-                                            )
-                                        }
-                                        style={{
-                                            opacity: 0.8,
-                                            color: "#FDCC06",
-                                            fontWeight: "bold",
-                                            backgroundColor: "#1D2D3E",
-                                            fontFamily: "Montserrat",
-                                        }}
-                                    >
-                                        Unlock
-                                    </Button>
-                                )}
+                    <div key={`question-${level}-${index}`} style={divStyle}>
+                        <div>{icon}</div>
+                        <div className="ml-4">
+                            <div style={titleStyle}>
+                                <Link href={link}>{title}</Link>
                             </div>
                         </div>
-                    </>
+                        <div className="ml-auto">
+                            {type === 0 && (
+                                <Button
+                                    variant="outlined"
+                                    onClick={() =>
+                                        handleOpenConfirmationModal(
+                                            `${level}-${index}`,
+                                            `/question?safe=${1}&level=${Number(level)}&order=${
+                                                index + 1
+                                            }`
+                                        )
+                                    }
+                                    style={{
+                                        opacity: 0.8,
+                                        color: "#FDCC06",
+                                        fontWeight: "bold",
+                                        backgroundColor: "#1D2D3E",
+                                        fontFamily: "Montserrat",
+                                        border: "1px solid #FDCC06",
+                                    }}
+                                >
+                                    Unlock
+                                </Button>
+                            )}
+                        </div>
+                    </div>
                 );
             })}
         </>

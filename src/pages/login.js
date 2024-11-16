@@ -64,15 +64,15 @@ export default function Login() {
                 router.push("/levels");
             }
         } catch (error) {
-            toast.error(error.response.data.message);
+            // toast.error(error.response.data.message);
         }
     };
 
     return (
         <>
-        <Head>
-        <title>Login - NJATH</title>
-      </Head>
+            <Head>
+                <title>Login - NJATH</title>
+            </Head>
             <Nav className="z-50"></Nav>
             <ToastContainer autoClose={2000} />
 
