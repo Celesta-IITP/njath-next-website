@@ -1,11 +1,13 @@
-// context/AuthContext.js
 import { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { useRouter } from "next/router"; // Changed from next/navigation
-import Loading from "@/components/Loading/Loading"; // Make sure this path is correct
+import { useRouter } from "next/router";
+import Loading from "@/components/Loading/Loading";
 
 const AuthContext = createContext();
+
+// Array of public routes that don't require authentication
+const PUBLIC_ROUTES = ["/login", "/register", "/", "/about"];
 
 export const useAuth = () => {
     const context = useContext(AuthContext);
@@ -21,6 +23,10 @@ export const AuthProvider = ({ children }) => {
     const [unlockedQuestion, setUnlockedQuestion] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const router = useRouter();
+
+    const isPublicRoute = (path) => {
+        return PUBLIC_ROUTES.some((route) => path === route || path.startsWith(`${route}/`));
+    };
 
     useEffect(() => {
         const checkAuthAndFetchUser = async () => {
@@ -58,8 +64,9 @@ export const AuthProvider = ({ children }) => {
             setUser(null);
 
             if (axios.isAxiosError(error) && error.response?.status === 401) {
-                // Only redirect if we're not already on the login page
-                if (router.pathname !== "/login") {
+                // Only redirect to login if we're on a protected route
+                const currentPath = router.pathname;
+                if (!isPublicRoute(currentPath)) {
                     toast.error("Please Log in First");
                     router.push("/login");
                 }
@@ -68,6 +75,17 @@ export const AuthProvider = ({ children }) => {
 
         checkAuthAndFetchUser();
     }, [router.pathname]);
+
+    // Protect routes that require authentication
+    useEffect(() => {
+        if (!isLoading) {
+            const currentPath = router.pathname;
+            if (!isPublicRoute(currentPath) && !isLoggedIn) {
+                toast.error("Please Log in First");
+                router.push("/login");
+            }
+        }
+    }, [isLoading, isLoggedIn, router.pathname]);
 
     const value = {
         user,

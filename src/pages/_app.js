@@ -5,18 +5,14 @@ import Image from "next/image";
 import Loader from "@/components/Loading/Loader.js";
 import Bg from "@components/BG/bg";
 import { AuthProvider } from "@context/AuthContext";
-import { createTheme, ThemeProvider } from '@mui/material';
+import { createTheme, ThemeProvider } from "@mui/material";
 import Head from "next/head";
 
 const theme = createTheme({
     typography: {
-      fontFamily: [
-        'Montserrat', 
-        'sans-serif',
-      ].join(','),
+        fontFamily: ["Montserrat", "sans-serif"].join(","),
     },
-    
-  });
+});
 
 export default function App({ Component, pageProps }) {
     const router = useRouter();
@@ -44,14 +40,13 @@ export default function App({ Component, pageProps }) {
     }, [router.events]);
     return (
         <main>
-            
             <ThemeProvider theme={theme}>
-            {/* <CssBaseline /> */}
-            <AuthProvider>
-                <Bg />
-                {loading ? <Loader /> : <Component {...pageProps} />}
-            </AuthProvider>
+                {/* <CssBaseline /> */}
+                <AuthProvider>
+                    <Bg />
+                    {loading ? <Loader /> : <Component {...pageProps} />}
+                </AuthProvider>
             </ThemeProvider>
-        </main >
+        </main>
     );
 }

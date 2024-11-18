@@ -45,7 +45,7 @@ const Levels = () => {
             };
             fetchData();
         }
-    }, [isLoading, router, setUser]);
+    }, []);
 
     if (isLoading) {
         return <Loading />;

@@ -55,7 +55,7 @@ export default function Login() {
         try {
             const response = await axios.post(loginApiUrl, details, config);
 
-            const cookies = response.headers["set-cookie"];
+            // const cookies = response.headers["set-cookie"];
 
             if (response.data.success === false) toast.error(response.data.message);
             else {
